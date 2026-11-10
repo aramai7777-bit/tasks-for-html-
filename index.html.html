@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تمارين HTML التفاعلية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f4ff;--bg2:#e9ecff;--card:rgba(255,255,255,.85);--text:#1b2038;--muted:#6b7394;--border:rgba(99,102,241,.16);--brand:#6366f1;--brand2:#8b5cf6;--ok:#16a34a;--bad:#e11d48;--code:#0d1224;--codetx:#e6e9f7;--shadow:0 10px 40px -12px rgba(79,70,229,.25)}
+:root[data-theme="dark"]{--bg:#0b0f1e;--bg2:#121832;--card:rgba(23,29,52,.85);--text:#eef0fb;--muted:#9aa3c7;--border:rgba(129,140,248,.2);--brand:#818cf8;--brand2:#a78bfa;--code:#070a15;--shadow:0 10px 40px -12px rgba(0,0,0,.6)}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;min-height:100vh;color:var(--text);font-family:"Cairo","Segoe UI",Tahoma,sans-serif;line-height:1.7;background:radial-gradient(900px 500px at 85% -10%,var(--bg2),transparent),radial-gradient(700px 400px at 5% 10%,var(--bg2),transparent),var(--bg)}
+.wrap{max-width:1040px;margin:auto;padding:22px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.logo{font-weight:900;font-size:1.1rem;display:flex;gap:8px;align-items:center}
+.logo b{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-radius:10px;padding:2px 9px;font-family:Consolas,monospace;direction:ltr}
+#theme{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:12px;width:42px;height:42px;font-size:1.1rem;cursor:pointer}
+.hero{text-align:center;padding:26px 16px;border-radius:24px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow);backdrop-filter:blur(10px)}
+.hero h1{margin:0;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;background:linear-gradient(135deg,var(--brand),var(--brand2),#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);margin:6px 0 16px}
+.bar{height:12px;background:var(--border);border-radius:99px;overflow:hidden;max-width:520px;margin:auto}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--brand),var(--brand2),#ec4899);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+#pct{font-size:.9rem;color:var(--muted);margin-top:8px;font-weight:600}
+nav{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;padding:18px 2px 10px}
+nav button{min-width:44px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:99px;padding:6px 10px;cursor:pointer;font:600 .92rem inherit;font-family:inherit;transition:.2s}
+nav button:hover{transform:translateY(-2px)}
+nav button.active{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;box-shadow:0 8px 20px -8px var(--brand)}
+nav button.done{border-color:var(--ok)}nav button.done::after{content:"✓";color:var(--ok);font-weight:900;margin-right:3px}
+nav button.active.done::after{color:#fff}
+.task-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--shadow);backdrop-filter:blur(10px);margin-bottom:16px}
+.task-card h2{margin:0 0 4px;font-size:1.3rem}
+.task-card p{margin:0;color:var(--muted)}
+.task-card code{background:var(--border);padding:1px 8px;border-radius:6px;font-family:Consolas,monospace;direction:ltr;display:inline-block;color:var(--brand)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.pane{border-radius:18px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--code);display:flex;flex-direction:column}
+.pane.light{background:#fff}
+.pbar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:rgba(127,127,160,.14);font:600 .8rem Consolas,monospace;color:var(--muted);direction:ltr}
+.pbar span{width:11px;height:11px;border-radius:50%}
+.pbar span:nth-child(1){background:#ff5f57}.pbar span:nth-child(2){background:#febc2e}.pbar span:nth-child(3){background:#28c840}
+.pbar em{margin-left:auto;font-style:normal}
+textarea{flex:1;width:100%;height:260px;background:transparent;color:var(--codetx);border:0;outline:0;padding:14px;font:14px/1.7 Consolas,"Courier New",monospace;direction:ltr;text-align:left;resize:vertical;tab-size:2}
+iframe{flex:1;width:100%;height:260px;border:0;background:#fff}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.actions button{border:0;border-radius:14px;padding:11px 22px;cursor:pointer;font:700 1rem inherit;font-family:inherit;transition:.2s}
+.actions button:hover{transform:translateY(-2px)}
+#check{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;box-shadow:0 10px 24px -10px var(--brand)}
+#next{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;display:none}
+#hint,#reset{background:var(--card);color:var(--text);border:1px solid var(--border)}
+#hinttx{display:none;margin-top:12px;padding:12px 16px;border-radius:14px;background:rgba(250,204,21,.14);border:1px dashed rgba(250,204,21,.6)}
+#msg{margin-top:12px;padding:0 4px;font-weight:700;min-height:1.7em}
+#msg.ok{color:var(--ok);animation:pop .4s}
+#msg.bad{color:var(--bad);animation:shake .35s}
+@keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes shake{25%{transform:translateX(6px)}75%{transform:translateX(-6px)}}
+footer{text-align:center;color:var(--muted);margin-top:28px;font-weight:600}
+footer b{color:var(--brand)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="logo"><b>&lt;/&gt;</b> تمارين HTML</div>
+    <button id="theme" aria-label="تغيير الوضع">🌙</button>
+  </div>
+
+  <section class="hero">
+    <h1>اتعلّم HTML بالتطبيق</h1>
+    <p class="sub">اكتب الكود، شوف النتيجة فورًا، واضغط تحقق</p>
+    <div class="bar"><i id="fill"></i></div>
+    <div id="pct"></div>
+  </section>
+
+  <nav id="nav"></nav>
+
+  <section class="task-card">
+    <h2 id="title"></h2>
+    <p id="task"></p>
+  </section>
+
+  <div class="grid">
+    <div class="pane">
+      <div class="pbar"><span></span><span></span><span></span><em>index.html</em></div>
+      <textarea id="code" spellcheck="false" aria-label="الكود"></textarea>
+    </div>
+    <div class="pane light">
+      <div class="pbar"><span></span><span></span><span></span><em>Preview</em></div>
+      <iframe id="out" sandbox title="النتيجة"></iframe>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="check">✅ تحقق</button>
+    <button id="next">التمرين الجاي ←</button>
+    <button id="hint">💡 تلميح</button>
+    <button id="reset">↺ إعادة</button>
+  </div>
+  <div id="hinttx"></div>
+  <div id="msg"></div>
+
+  <footer>صُنع بـ ❤️ — <b>Eng: Anas</b></footer>
+</div>
+
+<script>
+var q=function(d,s){return d.querySelector(s)},qa=function(d,s){return d.querySelectorAll(s)};
+var $=function(i){return document.getElementById(i)};
+
+function E(t,task,hint,r,f,s){return{t:t,task:task,hint:hint,r:r||[],f:f,start:s||""}}
+function run(e,d){
+  for(var i=0;i<e.r.length;i++){if(qa(d,e.r[i][0]).length<e.r[i][1])return e.r[i][2]}
+  return e.f?(e.f(d)||""):"";
+}
+function lvl(i){return i<12?"🟢 مبتدئ":i<26?"🟡 متوسط":"🔴 متقدم"}
+
+var EX=[
+/* ===== مبتدئ ===== */
+E("العنوان الرئيسي","اكتب عنوان <h1> فيه كلمة «مرحبا».","<h1>مرحبا</h1>",[["h1",1,"محتاج وسم h1."]],function(d){return /مرحبا/.test(q(d,"h1").textContent)?"":"لازم العنوان يكون فيه كلمة مرحبا."},"<!-- اكتب هنا -->\n"),
+E("الفقرات","أضف عنوان <h2> وتحته فقرتين <p>.","استخدم وسم p مرتين.",[["h2",1,"محتاج h2."],["p",2,"محتاج فقرتين p."]]),
+E("مستويات العناوين","اكتب العناوين الستة من <h1> لحد <h6>.","h1 h2 h3 h4 h5 h6",[["h1",1,"ناقص h1."],["h2",1,"ناقص h2."],["h3",1,"ناقص h3."],["h4",1,"ناقص h4."],["h5",1,"ناقص h5."],["h6",1,"ناقص h6."]]),
+E("عريض ومائل","اكتب جملة فيها كلمة <strong> وكلمة <em>.","<strong>مهم</strong> و <em>مائل</em>",[["strong",1,"ناقص strong."],["em",1,"ناقص em."]]),
+E("سطر جديد وخط فاصل","استخدم <br> لسطر جديد و<hr> لخط فاصل.","<br> و <hr> وسوم بدون إغلاق.",[["br",1,"ناقص br."],["hr",1,"ناقص hr."]]),
+E("القائمة النقطية","اعمل قائمة <ul> فيها 3 عناصر <li>.","<ul><li>..</li></ul>",[["ul li",3,"محتاج ul فيها 3 li."]]),
+E("القائمة المرقمة","اعمل قائمة <ol> فيها 3 عناصر <li>.","ol بدل ul.",[["ol li",3,"محتاج ol فيها 3 li."]]),
+E("قائمة داخل قائمة","اعمل <ul> وجواها قائمة <ul> تانية فيها <li>.","حط ul جوا li.",[["ul ul li",1,"محتاج قائمة متداخلة."]]),
+E("الروابط","اعمل رابط <a> يودّي لـ https://example.com ويفتح في تبويب جديد.","استخدم href وtarget='_blank'.",[["a",1,"محتاج وسم a."]],function(d){var a=q(d,"a");if(!/example\.com/.test(a.getAttribute("href")||""))return"الـ href مش صح.";return a.getAttribute("target")==="_blank"?"":"ضيف target='_blank'."}),
+E("رابط داخلي","اعمل رابط <a href='#end'> وعنصر تاني id بتاعه end.","الرابط # + قيمة الـ id.",[["a[href^='#']",1,"محتاج رابط href بيبدأ بـ #."]],function(d){var h=q(d,"a[href^='#']").getAttribute("href").slice(1);return h&&d.getElementById(h)?"":"مفيش عنصر id بتاعه نفس الاسم."}),
+E("الصور","أضف صورة <img> بخاصية src وخاصية alt فيها وصف.","<img src='..' alt='وصف'>",[["img[src]",1,"محتاج img فيها src."]],function(d){return(q(d,"img").getAttribute("alt")||"").trim()?"":"ناقص alt فيه وصف."}),
+E("أبعاد الصورة","أضف <img> بخاصيتين width وheight.","width='200' height='100'",[["img[width][height]",1,"محتاج img فيها width وheight."]]),
+/* ===== متوسط ===== */
+E("الجداول","اعمل <table> فيه صف عناوين <th> وصفين بيانات <td>.","table > tr > th / td",[["table",1,"محتاج table."],["th",1,"ناقص th."],["tr",3,"محتاج 3 صفوف tr."],["td",2,"ناقص td."]]),
+E("رأس وجسم الجدول","اعمل جدول فيه <thead> و<tbody>.","thead للعناوين وtbody للبيانات.",[["table thead tr",1,"ناقص thead فيه tr."],["table tbody tr",1,"ناقص tbody فيه tr."]]),
+E("دمج الخلايا","اعمل جدول فيه خلية بخاصية colspan.","<td colspan='2'>",[["table [colspan]",1,"محتاج خلية بـ colspan."]]),
+E("النموذج","اعمل <form> فيه <input> مع <label> وزر إرسال.","<button type='submit'>إرسال</button>",[["form",1,"محتاج form."],["form input",1,"ناقص input."],["form label",1,"ناقص label."],["form button,form input[type=submit]",1,"ناقص زر إرسال."]]),
+E("أنواع الحقول","اعمل 3 حقول من نوع email وpassword وnumber.","type='email' ...",[["input[type=email]",1,"ناقص email."],["input[type=password]",1,"ناقص password."],["input[type=number]",1,"ناقص number."]]),
+E("القائمة المنسدلة","اعمل <select> فيها 3 خيارات <option>.","select > option",[["select option",3,"محتاج select فيها 3 option."]]),
+E("منطقة النص","أضف <textarea> بخاصية rows.","<textarea rows='4'></textarea>",[["textarea[rows]",1,"محتاج textarea فيها rows."]]),
+E("أزرار الاختيار","اعمل زرين <input type='radio'> بنفس الاسم name.","نفس name يخليهم مجموعة.",[["input[type=radio]",2,"محتاج زرين radio."]],function(d){var r=qa(d,"input[type=radio]");return r[0].name&&r[0].name===r[1].name?"":"لازم الاتنين ليهم نفس name."}),
+E("مربعات الاختيار","اعمل 2 <input type='checkbox'> كل واحد معاه <label>.","label for='id'",[["input[type=checkbox]",2,"محتاج 2 checkbox."],["label",2,"محتاج 2 label."]]),
+E("حقل إجباري","اعمل <input> بخاصية required وplaceholder.","required placeholder='اسمك'",[["input[required][placeholder]",1,"محتاج input فيه required وplaceholder."]]),
+E("div و span","اعمل <div> وجواه <span> بخاصية class.","<div><span class='x'>..</span></div>",[["div span[class]",1,"محتاج span فيها class جوا div."]]),
+E("الوسوم الدلالية","استخدم <header> و<main> و<footer>.","semantic tags",[["header",1,"ناقص header."],["main",1,"ناقص main."],["footer",1,"ناقص footer."]]),
+E("قائمة التنقل","اعمل <nav> فيه 3 روابط <a>.","nav > a",[["nav a",3,"محتاج nav فيه 3 روابط."]]),
+E("القسم والمقال","اعمل <section> وجواه <article>.","section > article",[["section article",1,"محتاج article جوا section."]]),
+/* ===== متقدم ===== */
+E("ستايل مباشر","اعمل <p> بخاصية style فيها color.","style='color:red'",[["p[style]",1,"محتاج p فيها style."]],function(d){return /color/.test(q(d,"p[style]").getAttribute("style"))?"":"الـ style لازم فيه color."}),
+E("وسم style","اكتب وسم <style> فيه قاعدة CSS لعنصر p.","<style>p{color:blue}</style>",[["style",1,"محتاج وسم style."]],function(d){return /p\s*\{[^}]+\}/.test(q(d,"style").textContent)?"":"اكتب قاعدة زي p{color:blue}."}),
+E("صوت أو فيديو","أضف <audio> أو <video> بخاصية controls.","<video controls src='..'>",[],function(d){return q(d,"audio[controls],video[controls]")?"":"محتاج audio أو video فيها controls."}),
+E("إطار iframe","أضف <iframe> بخاصية src.","<iframe src='https://example.com'>",[["iframe[src]",1,"محتاج iframe فيها src."]]),
+E("التفاصيل","اعمل <details> وجواه <summary>.","details > summary",[["details summary",1,"محتاج details فيها summary."]]),
+E("الاقتباس","اكتب <blockquote> وبعده <cite> للمصدر.","blockquote و cite",[["blockquote",1,"ناقص blockquote."],["cite",1,"ناقص cite."]]),
+E("عرض الكود","اعرض كود باستخدام <pre> وجواها <code>.","pre > code",[["pre code",1,"محتاج code جوا pre."]]),
+E("الاختصار والتمييز","اكتب <abbr> بخاصية title، و<mark> لنص مميز.","<abbr title='HyperText'>HTML</abbr>",[["abbr[title]",1,"محتاج abbr فيه title."],["mark",1,"ناقص mark."]]),
+E("قائمة التعريفات","اعمل <dl> فيها <dt> و<dd>.","dl > dt + dd",[["dl dt",1,"ناقص dt."],["dl dd",1,"ناقص dd."]]),
+E("الصورة مع شرح","اعمل <figure> فيها <img> و<figcaption>.","figure > img + figcaption",[["figure img",1,"محتاج img جوا figure."],["figure figcaption",1,"ناقص figcaption."]]),
+E("الرموز الخاصة","اكتب رمز الحقوق © باستخدام &copy;.","&copy;",[],function(d){return d.body.textContent.indexOf("©")>-1?"":"استخدم &copy; عشان يظهر ©."}),
+E("مشروع ختامي","ابني صفحة صغيرة: <header> فيه <h1>، و<img> بـ alt، و<p>، و<ul> فيها 2 عنصر، و<footer>.","كل وسم مرة واحدة على الأقل.",[["header h1",1,"ناقص header فيه h1."],["img[alt]",1,"ناقص img فيها alt."],["p",1,"ناقص p."],["ul li",2,"ناقص ul فيها 2 li."],["footer",1,"ناقص footer."]])
+];
+
+var cur=0,done={};
+try{done=JSON.parse(localStorage.getItem("htmlEx2")||"{}")}catch(e){}
+function save(){try{localStorage.setItem("htmlEx2",JSON.stringify(done))}catch(e){}}
+
+/* الوضع الليلي */
+var theme="light";
+try{theme=localStorage.getItem("htmlExTheme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){}
+function applyTheme(){document.documentElement.setAttribute("data-theme",theme);$("theme").textContent=theme==="dark"?"☀️":"🌙"}
+$("theme").onclick=function(){theme=theme==="dark"?"light":"dark";try{localStorage.setItem("htmlExTheme",theme)}catch(e){}applyTheme()};
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function progress(){var n=Object.keys(done).length;$("fill").style.width=n/EX.length*100+"%";$("pct").textContent="أنجزت "+n+" من "+EX.length+(n===EX.length?" 🎉 ممتاز، خلصت كل التمارين!":"")}
+function nav(){var h="";EX.forEach(function(e,i){h+='<button title="'+e.t+'" class="'+(i===cur?"active ":"")+(done[i]?"done":"")+'" data-i="'+i+'">'+(i+1)+"</button>"});$("nav").innerHTML=h}
+function preview(){$("out").srcdoc='<meta charset="utf-8"><body dir="rtl" style="font-family:sans-serif;padding:8px">'+$("code").value}
+function load(i){
+  cur=i;var e=EX[i];
+  $("title").textContent=(i+1)+". "+e.t+"  ·  "+lvl(i);
+  $("task").innerHTML=esc(e.task).replace(/&lt;(\w+)&gt;/g,"<code>&lt;$1&gt;</code>");
+  $("code").value=e.start;
+  $("hinttx").style.display="none";$("hinttx").textContent="💡 "+e.hint;
+  $("msg").textContent="";$("msg").className="";
+  $("next").style.display="none";
+  nav();preview();
+}
+
+$("nav").onclick=function(ev){var b=ev.target.closest("button");if(b)load(+b.dataset.i)};
+$("code").oninput=preview;
+$("code").onkeydown=function(e){
+  if(e.key==="Tab"){e.preventDefault();var t=this,s=t.selectionStart;t.value=t.value.slice(0,s)+"  "+t.value.slice(t.selectionEnd);t.selectionStart=t.selectionEnd=s+2;preview()}
+  if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();$("check").click()}
+};
+$("hint").onclick=function(){$("hinttx").style.display="block"};
+$("reset").onclick=function(){load(cur)};
+$("next").onclick=function(){if(cur<EX.length-1)load(cur+1)};
+$("check").onclick=function(){
+  var d=new DOMParser().parseFromString($("code").value,"text/html");
+  var err=run(EX[cur],d);
+  $("msg").className="";void $("msg").offsetWidth;
+  if(err){$("msg").textContent="❌ "+err;$("msg").className="bad";return}
+  done[cur]=1;save();progress();nav();
+  $("msg").textContent=cur<EX.length-1?"✅ برافو! إجابتك صح.":"🎉 خلصت كل التمارين، شغل عالي!";
+  $("msg").className="ok";
+  if(cur<EX.length-1)$("next").style.display="inline-block";
+};
+
+applyTheme();progress();load(0);
+</script>
+</body>
+</html>
